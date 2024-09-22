@@ -1,0 +1,57 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="profile-page layout layout--3">
+  <div class="container">
+    {% include 'base/topics_component.html' %}
+
+    <div class="profile-section">
+      <div class="profile">
+        <div class="profile__avatar">
+          <div class="avatar avatar--large active">
+            <img src="{{user.avatar.url}}" alt="Profile Picture of {{user.name}}" />
+          </div>
+        </div>
+        <div class="profile__info">
+          <h3>{{user.name}}</h3>
+          <p>@{{user.username}}</p>
+          {% if request.user == user %}
+          <a href="{% url 'update-user' %}" class="btn btn--main btn--pill">Edit Profile</a>
+          {% endif %}
+        </div>
+        <div class="profile__about">
+          <h3>About</h3>
+          <p>{{user.bio | default:"No bio added yet. Share something about your journey."}}</p>
+        </div>
+      </div>
+
+      <div class="profile__support-message">
+        <h3>Support Messages</h3>
+        <p>{{ user.support_message | default:"No support messages yet. Stay strong, and keep connecting!" }}</p>
+      </div>
+
+      <div class="profile__groups">
+        <h3>Groups Joined</h3>
+        {% if user.groups.all %}
+        <ul>
+          {% for group in user.groups.all %}
+          <li>{{ group.name }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>This user hasn't joined any groups yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="discussion-section">
+      <div class="roomList__header">
+        <h2>Discussions Hosted by {{ user.name }}</h2>
+      </div>
+      {% include 'base/feed_component.html' %}
+    </div>
+
+    {% include 'base/activity_component.html' %}
+  </div>
+</main>
+{% endblock content %}
